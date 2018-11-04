@@ -1,5 +1,5 @@
 SHOW DATABASES;
-DROP DATABASE hbana3assign2db IF EXISTS;
+DROP DATABASE  IF EXISTS hbana3assign2db;
 CREATE DATABASE hbana3assign2db;
 USE hbana3assign2db;
 GRANT USAGE ON *.* TO 'ta'@'localhost';
