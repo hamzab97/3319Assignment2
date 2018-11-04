@@ -1,5 +1,5 @@
 -- //file 2
-USE hbana3assign2db; --switch to working db
+USE hbana3assign2db;
 ALTER TABLE Product MODIFY NumberOfItemsOnHand INT AFTER Description;
 ALTER TABLE Product MODIFY CostPerItem INT AFTER Description;
 LOAD DATA LOCAL INFILE '/home/hamza/Western/3319/mysql/assign2/loaddatafall2018.txt' INTO TABLE Product COLUMNS TERMINATED BY ',';
