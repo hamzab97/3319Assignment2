@@ -1,0 +1,12 @@
+SHOW DATABASES;
+DROP DATABASE hbana3assign2db;
+CREATE DATABASE hbana3assign2db;
+USE hbana3assign2db;
+-- //command 5 in file 1 creation to give TA access
+SHOW TABLES;
+CREATE TABLE Product(ProductID VARCHAR(2) NOT NULL PRIMARY KEY, NumberOfItemsOnHand INT, Description VARCHAR(20), CostPerItem INT);
+CREATE TABLE Agent (AgentID VARCHAR(2) NOT NULL PRIMARY KEY, FirstName VARCHAR(30), LastName VARCHAR(30), Commission INT, City VARCHAR (15));
+CREATE TABLE Customer(CustomerID VARCHAR(2) NOT NULL PRIMARY KEY, FirstName VARCHAR(30), LastName VARCHAR(30), PhoneNumber INT, City VARCHAR (15), AgentID VARCHAR(2), FOREIGN KEY (AgentID) REFERENCES Agent(AgentID));
+ALTER TABLE Customer MODIFY AgentID INT NOT NULL;
+CREATE TABLE BoughtBy (Quantity INT NOT NULL, ProductID VARCHAR(2) NOT NULL, CustomerID VARCHAR(2) NOT NULL, FOREIGN KEY (ProductID) REFERENCES Product(ProductID), FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID));
+SHOW TABLES;

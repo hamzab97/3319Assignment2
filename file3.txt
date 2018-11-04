@@ -1,0 +1,19 @@
+-- //file 3, add numbers to queries
+DESCRIBE Product;
+DESCRIBE Agent;
+DESCRIBE Customer;
+DESCRIBE BoughtBy;
+SELECT DISTINCT City FROM Customer;
+SELECT * FROM Agent ORDER BY Agent.City;
+SELECT FirstName, LastName FROM Customer WHERE City = "Springfield";
+SELECT Customer.LastName FROM Customer WHERE Customer.AgentID IN (SELECT Agent.AgentID from Agent WHERE Agent.FirstName = "Regis");
+SELECT Description FROM Product WHERE Product.Description LIKE "%pad%" OR Product.Description LIKE "%Pad%";
+SELECT Customer.LastName, Product.Description, BoughtBy.Quantity FROM Customer JOIN BoughtBy ON Customer.CustomerID = BoughtBy.CustomerID JOIN Product ON BoughtBy.ProductID = Product.ProductID;
+SELECT SUM(Quantity) AS "HOMER'S TOTAL PURCHASES" FROM BoughtBy WHERE BoughtBy.CustomerID = (SELECT Customer.CustomerID FROM Customer WHERE Customer.FirstName = "Homer");
+-- numer 9
+SELECT Product.Description, Product.NumberOfItemsOnHand FROM Product WHERE NOT EXISTS (SELECT BoughtBy.ProductID FROM BoughtBy WHERE Product.ProductID = BoughtBy.ProductID);
+-- number 11
+SELECT Agent.FirstName AS "Agent First Name", Agent.LastName AS "Agent Last Name", Customer.FirstName AS "Customer First Name", Customer.LastName AS "Customer Last Name" FROM Agent JOIN Customer ON Agent.City = Customer.City AND Customer.AgentID = Agent.AgentID;
+SELECT SUM(Quantity) AS "TOTAL NUMBER OF KNEE PADS PURCHASED" FROM BoughtBy WHERE BoughtBy.ProductID = (SELECT Product.ProductID FROM Product WHERE Product.Description = "Knee Pads");
+-- number 14
+SELECT Agent.FirstName, Agent.LastName FROM Agent JOIN Customer ON Customer.AgentID = Agent.AgentID JOIN BoughtBy ON BoughtBy.CustomerID = Customer.CustomerID;

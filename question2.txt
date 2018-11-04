@@ -1,0 +1,89 @@
+SHOW DATABASES;
+DROP DATABASE hbana3assign2db;
+CREATE DATABASE hbana3assign2db;
+USE hbana3assign2db;
+-- //command 5 in file 1 creation to give TA access
+SHOW TABLES;
+CREATE TABLE Product(ProductID VARCHAR(2) NOT NULL PRIMARY KEY, NumberOfItemsOnHand INT, Description VARCHAR(20), CostPerItem INT);
+CREATE TABLE Agent (AgentID VARCHAR(2) NOT NULL PRIMARY KEY, FirstName VARCHAR(30), LastName VARCHAR(30), Commission INT, City VARCHAR (15));
+CREATE TABLE Customer(CustomerID VARCHAR(2) NOT NULL PRIMARY KEY, FirstName VARCHAR(30), LastName VARCHAR(30), PhoneNumber INT, City VARCHAR (15), AgentID VARCHAR(2), FOREIGN KEY (AgentID) REFERENCES Agent(AgentID));
+ALTER TABLE Customer MODIFY AgentID INT NOT NULL;
+CREATE TABLE BoughtBy (Quantity INT NOT NULL, ProductID VARCHAR(2) NOT NULL, CustomerID VARCHAR(2) NOT NULL, FOREIGN KEY (ProductID) REFERENCES Product(ProductID), FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID));
+SHOW TABLES;
+
+-- //file 2
+ALTER TABLE Product MODIFY NumberOfItemsOnHand INT AFTER Description;
+ALTER TABLE Product MODIFY CostPerItem INT AFTER Description;
+LOAD DATA LOCAL INFILE '/home/hamza/Western/3319/mysql/assign2/loaddatafall2018.txt' INTO TABLE Product COLUMNS TERMINATED BY ',';
+SELECT * FROM Product;
+INSERT INTO Product VALUES (66, "Elbow pads", 14.25, 120);
+INSERT INTO Product VALUES (55, "Bicycle", 150, 120);
+ALTER TABLE Agent MODIFY City VARCHAR(15) AFTER LastName;
+INSERT INTO Agent VALUES (99, "Hugh", "Grant", "Springfield",16);
+INSERT INTO Agent VALUES (22, "Courtney", "Cox", "New York", 25),
+(66, "Rosie", "ODonnell", "Ottawa", 100),
+(33, "David", "Letterman", "Bedrock", 100),
+(11, "Regis", "Philbin",  "Boston", 33),
+(12, "Rosie", "Cox",  "Ottawa", 50);
+INSERT INTO Agent VALUES (05, "Hamza", "Bana", "Toronto", 5);
+ALTER TABLE Customer MODIFY PhoneNumber INT AFTER City;
+INSERT INTO Customer VALUES (21, "Homer", "Simpson", "Springfield", 686-8956, NULL),
+(31, "Sideshow", "Bob", "Springfield", 686-5555, NULL),
+(12, "Monty", "Burns", "Springfield", 789-0000, NULL),
+(15, "Fred", "Flintstone", "Bedrock", 777-2345, NULL),
+(13, "Super", "Man", "Kypto", 888-1234, NULL),
+(10, "Barney", "Rubble", "Bedrock", 777-1234, NULL),
+(14, "Peter", "Griffens", "Providence", 987-4567, NULL);
+INSERT INTO BoughtBy Values (20, 99, 21), (14, 12, 21), (10, 66, 21),
+(1, 99, 31), (2, 12, 31), (4, 78, 31), (2, 66, 31),
+(2, 66, 15), (2, 78, 15),
+(19, 66, 14);
+UPDATE Customer SET Customer.AgentID = 99 WHERE Customer.FirstName = "Homer" OR Customer.FirstName = "Monty" OR Customer.FirstName = "Peter";
+UPDATE Customer SET Customer.AgentID = 33 WHERE Customer.FirstName = "Super";
+UPDATE Customer SET Customer.AgentID = 11 WHERE Customer.FirstName = "Barney" OR Customer.FirstName = "Fred";
+UPDATE Customer SET Customer.AgentID= 12 WHERE Customer.FirstName = "Sideshow";
+SELECT * FROM Product;
+SELECT * FROM Customer;
+SELECT * FROM BoughtBy;
+SELECT * FROM Agent;
+UPDATE Customer SET Customer.FirstName = "Wonder", Customer.LastName = "Woman" WHERE Customer.FirstName = "Super" AND Customer.LastName = "Man";
+UPDATE Product SET Product.NumberOfItemsOnHand = 5 WHERE Product.ProductID IN (SELECT ProductID from BoughtBy WHERE BoughtBy.CustomerID IN (SELECT CustomerID FROM Customer Where FirstName = "Sideshow"));
+UPDATE Customer SET City = "Boston" WHERE Customer.AgentID IN (SELECT Agent.AgentID FROM Agent WHERE Agent.FirstName = "Regis");
+SELECT * FROM Product;
+SELECT * FROM Customer;
+SELECT * FROM BoughtBy;
+SELECT * FROM Agent;
+
+
+-- //file 3, add numbers to queries
+DESCRIBE Product;
+DESCRIBE Agent;
+DESCRIBE Customer;
+DESCRIBE BoughtBy;
+SELECT DISTINCT City FROM Customer;
+SELECT * FROM Agent ORDER BY Agent.City;
+SELECT FirstName, LastName FROM Customer WHERE City = "Springfield";
+SELECT Customer.LastName FROM Customer WHERE Customer.AgentID IN (SELECT Agent.AgentID from Agent WHERE Agent.FirstName = "Regis");
+SELECT Description FROM Product WHERE Product.Description LIKE "%pad%" OR Product.Description LIKE "%Pad%";
+SELECT Customer.LastName, Product.Description, BoughtBy.Quantity FROM Customer JOIN BoughtBy ON Customer.CustomerID = BoughtBy.CustomerID JOIN Product ON BoughtBy.ProductID = Product.ProductID;
+SELECT SUM(Quantity) AS "HOMER'S TOTAL PURCHASES" FROM BoughtBy WHERE BoughtBy.CustomerID = (SELECT Customer.CustomerID FROM Customer WHERE Customer.FirstName = "Homer");
+-- numer 9
+SELECT Product.Description, Product.NumberOfItemsOnHand FROM Product WHERE NOT EXISTS (SELECT BoughtBy.ProductID FROM BoughtBy WHERE Product.ProductID = BoughtBy.ProductID);
+-- number 11
+SELECT Agent.FirstName AS "Agent First Name", Agent.LastName AS "Agent Last Name", Customer.FirstName AS "Customer First Name", Customer.LastName AS "Customer Last Name" FROM Agent JOIN Customer ON Agent.City = Customer.City AND Customer.AgentID = Agent.AgentID;
+SELECT SUM(Quantity) AS "TOTAL NUMBER OF KNEE PADS PURCHASED" FROM BoughtBy WHERE BoughtBy.ProductID = (SELECT Product.ProductID FROM Product WHERE Product.Description = "Knee Pads");
+-- number 14
+SELECT Agent.FirstName, Agent.LastName FROM Agent JOIN Customer ON Customer.AgentID = Agent.AgentID JOIN BoughtBy ON BoughtBy.CustomerID = Customer.CustomerID;
+
+
+-- file 4
+SELECT * FROM Product;
+SELECT * FROM Customer;
+SELECT * FROM BoughtBy;
+SELECT * FROM Agent;
+CREATE VIEW OrderSummary AS SELECT Customer.FirstName AS "CUSTOMER FIRST NAME", Customer.LastName AS "CUSTOMER LAST NAME", Product.Description, BoughtBy.Quantity, BoughtBy.Quantity * Product.CostPerItem AS "COST OFTOTAL ORDER" FROM Customer INNER JOIN BoughtBy ON BoughtBy.CustomerID = Customer.CustomerID INNER JOIN Product ON Product.ProductID = BoughtBy.ProductID ORDER BY Customer.LastName;
+SELECT * FROM OrderSummary;
+SELECT * FROM OrderSummary WHERE `COST OFTOTAL ORDER` > 100;
+DELETE FROM Product WHERE Description="Bicycle";
+SELECT * FROM Product;
+DELETE FROM Agent WHERE Agent.City="Springfield"; --not deleted because that agent is used in the customer table

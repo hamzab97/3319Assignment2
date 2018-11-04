@@ -1,0 +1,42 @@
+-- //file 2
+ALTER TABLE Product MODIFY NumberOfItemsOnHand INT AFTER Description;
+ALTER TABLE Product MODIFY CostPerItem INT AFTER Description;
+LOAD DATA LOCAL INFILE '/home/hamza/Western/3319/mysql/assign2/loaddatafall2018.txt' INTO TABLE Product COLUMNS TERMINATED BY ',';
+SELECT * FROM Product;
+INSERT INTO Product VALUES (66, "Elbow pads", 14.25, 120);
+INSERT INTO Product VALUES (55, "Bicycle", 150, 120);
+ALTER TABLE Agent MODIFY City VARCHAR(15) AFTER LastName;
+INSERT INTO Agent VALUES (99, "Hugh", "Grant", "Springfield",16);
+INSERT INTO Agent VALUES (22, "Courtney", "Cox", "New York", 25),
+(66, "Rosie", "ODonnell", "Ottawa", 100),
+(33, "David", "Letterman", "Bedrock", 100),
+(11, "Regis", "Philbin",  "Boston", 33),
+(12, "Rosie", "Cox",  "Ottawa", 50);
+INSERT INTO Agent VALUES (05, "Hamza", "Bana", "Toronto", 5);
+ALTER TABLE Customer MODIFY PhoneNumber INT AFTER City;
+INSERT INTO Customer VALUES (21, "Homer", "Simpson", "Springfield", 686-8956, NULL),
+(31, "Sideshow", "Bob", "Springfield", 686-5555, NULL),
+(12, "Monty", "Burns", "Springfield", 789-0000, NULL),
+(15, "Fred", "Flintstone", "Bedrock", 777-2345, NULL),
+(13, "Super", "Man", "Kypto", 888-1234, NULL),
+(10, "Barney", "Rubble", "Bedrock", 777-1234, NULL),
+(14, "Peter", "Griffens", "Providence", 987-4567, NULL);
+INSERT INTO BoughtBy Values (20, 99, 21), (14, 12, 21), (10, 66, 21),
+(1, 99, 31), (2, 12, 31), (4, 78, 31), (2, 66, 31),
+(2, 66, 15), (2, 78, 15),
+(19, 66, 14);
+UPDATE Customer SET Customer.AgentID = 99 WHERE Customer.FirstName = "Homer" OR Customer.FirstName = "Monty" OR Customer.FirstName = "Peter";
+UPDATE Customer SET Customer.AgentID = 33 WHERE Customer.FirstName = "Super";
+UPDATE Customer SET Customer.AgentID = 11 WHERE Customer.FirstName = "Barney" OR Customer.FirstName = "Fred";
+UPDATE Customer SET Customer.AgentID= 12 WHERE Customer.FirstName = "Sideshow";
+SELECT * FROM Product;
+SELECT * FROM Customer;
+SELECT * FROM BoughtBy;
+SELECT * FROM Agent;
+UPDATE Customer SET Customer.FirstName = "Wonder", Customer.LastName = "Woman" WHERE Customer.FirstName = "Super" AND Customer.LastName = "Man";
+UPDATE Product SET Product.NumberOfItemsOnHand = 5 WHERE Product.ProductID IN (SELECT ProductID from BoughtBy WHERE BoughtBy.CustomerID IN (SELECT CustomerID FROM Customer Where FirstName = "Sideshow"));
+UPDATE Customer SET City = "Boston" WHERE Customer.AgentID IN (SELECT Agent.AgentID FROM Agent WHERE Agent.FirstName = "Regis");
+SELECT * FROM Product;
+SELECT * FROM Customer;
+SELECT * FROM BoughtBy;
+SELECT * FROM Agent;
