@@ -2,7 +2,7 @@
 USE hbana3assign2db;
 ALTER TABLE Product MODIFY NumberOfItemsOnHand INT AFTER Description;
 ALTER TABLE Product MODIFY CostPerItem INT AFTER Description;
-LOAD DATA LOCAL INFILE '/3319Assignment2/loaddatafall2018.txt' INTO TABLE Product COLUMNS TERMINATED BY ',';
+LOAD DATA LOCAL INFILE '/home/centos/3319Assignment2/loaddatafall2018.txt' INTO TABLE Product COLUMNS TERMINATED BY ',';
 SELECT * FROM Product;
 INSERT INTO Product VALUES (66, "Elbow pads", 14.25, 120);
 INSERT INTO Product VALUES (55, "Bicycle", 150, 120);
