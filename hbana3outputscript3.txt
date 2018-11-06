@@ -1,0 +1,122 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SELECT Description FROM Product
+--------------
+
+Description
+Bike
+Socks
+Elbow pads
+Knee Pads
+Roller Blades
+Helmet
+--------------
+SELECT DISTINCT City FROM Customer
+--------------
+
+City
+Boston
+Springfield
+Kypto
+Providence
+--------------
+SELECT * FROM Agent ORDER BY Agent.City
+--------------
+
+AgentID	FirstName	LastName	City	Commission
+33	David	Letterman	Bedrock	100
+11	Regis	Philbin	Boston	33
+22	Courtney	Cox	New York	25
+12	Rosie	Cox	Ottawa	50
+66	Rosie	ODonnell	Ottawa	100
+99	Hugh	Grant	Springfield	16
+5	Hamza	Bana	Toronto	5
+--------------
+SELECT FirstName, LastName FROM Customer WHERE City = "Springfield"
+--------------
+
+FirstName	LastName
+Monty	Burns
+Homer	Simpson
+Sideshow	Bob
+--------------
+SELECT Customer.LastName FROM Customer WHERE Customer.AgentID IN (SELECT Agent.AgentID from Agent WHERE Agent.FirstName = "Regis")
+--------------
+
+LastName
+Rubble
+Flintstone
+--------------
+SELECT Description FROM Product WHERE Product.Description LIKE "%pad%" OR Product.Description LIKE "%Pad%"
+--------------
+
+Description
+Elbow pads
+Knee Pads
+--------------
+SELECT Customer.LastName, Product.Description, BoughtBy.Quantity FROM Customer JOIN BoughtBy ON Customer.CustomerID = BoughtBy.CustomerID JOIN Product ON BoughtBy.ProductID = Product.ProductID
+--------------
+
+LastName	Description	Quantity
+Simpson	Socks	14
+Bob	Socks	2
+Simpson	Elbow pads	10
+Bob	Elbow pads	2
+Flintstone	Elbow pads	2
+Griffens	Elbow pads	19
+Bob	Knee Pads	4
+Flintstone	Knee Pads	2
+Simpson	Helmet	20
+Bob	Helmet	1
+--------------
+SELECT SUM(Quantity) AS "HOMER'S TOTAL PURCHASES" FROM BoughtBy WHERE BoughtBy.CustomerID = (SELECT Customer.CustomerID FROM Customer WHERE Customer.FirstName = "Homer")
+--------------
+
+HOMER'S TOTAL PURCHASES
+44
+--------------
+SELECT Customer.FirstName, Customer.LastName, SUM(CostPerItem) FROM Customer, Product, BoughtBy WHERE Customer.CustomerID = BoughtBy.CustomerID GROUP BY Customer.CustomerID
+--------------
+
+FirstName	LastName	SUM(CostPerItem)
+Peter	Griffens	282
+Fred	Flintstone	564
+Homer	Simpson	846
+Sideshow	Bob	1128
+--------------
+SELECT Product.Description, Product.NumberOfItemsOnHand FROM Product WHERE NOT EXISTS (SELECT BoughtBy.ProductID FROM BoughtBy WHERE Product.ProductID = BoughtBy.ProductID)
+--------------
+
+Description	NumberOfItemsOnHand
+Bike	200
+Roller Blades	89
+--------------
+SELECT Agent.FirstName AS "Agent First Name", Agent.LastName AS "Agent Last Name", Customer.FirstName AS "Customer First Name", Customer.LastName AS "Customer Last Name" FROM Agent JOIN Customer ON Agent.City = Customer.City AND Customer.AgentID = Agent.AgentID
+--------------
+
+Agent First Name	Agent Last Name	Customer First Name	Customer Last Name
+Regis	Philbin	Barney	Rubble
+Regis	Philbin	Fred	Flintstone
+Hugh	Grant	Monty	Burns
+Hugh	Grant	Homer	Simpson
+--------------
+SELECT SUM(Quantity) AS "TOTAL NUMBER OF KNEE PADS PURCHASED" FROM BoughtBy WHERE BoughtBy.ProductID = (SELECT Product.ProductID FROM Product WHERE Product.Description = "Knee Pads")
+--------------
+
+TOTAL NUMBER OF KNEE PADS PURCHASED
+6
+--------------
+SELECT Agent.FirstName, Agent.LastName FROM Agent JOIN Customer ON Customer.AgentID = Agent.AgentID JOIN BoughtBy ON BoughtBy.CustomerID = Customer.CustomerID
+--------------
+
+FirstName	LastName
+Regis	Philbin
+Regis	Philbin
+Rosie	Cox
+Rosie	Cox
+Rosie	Cox
+Rosie	Cox
+Hugh	Grant
+Hugh	Grant
+Hugh	Grant
+Hugh	Grant
