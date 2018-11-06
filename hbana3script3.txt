@@ -16,7 +16,7 @@ SELECT Customer.LastName, Product.Description, BoughtBy.Quantity FROM Customer J
 #query8
 SELECT SUM(Quantity) AS "HOMER'S TOTAL PURCHASES" FROM BoughtBy WHERE BoughtBy.CustomerID = (SELECT Customer.CustomerID FROM Customer WHERE Customer.FirstName = "Homer");
 #numer 9
-#create query
+SELECT Customer.FirstName, Customer.LastName, SUM(CostPerItem) FROM Customer, Product, BoughtBy WHERE Customer.CustomerID = BoughtBy.CustomerID GROUP BY Customer.CustomerID;
 #query10
 SELECT Product.Description, Product.NumberOfItemsOnHand FROM Product WHERE NOT EXISTS (SELECT BoughtBy.ProductID FROM BoughtBy WHERE Product.ProductID = BoughtBy.ProductID);
 # number 11
