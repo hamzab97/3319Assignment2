@@ -1,4 +1,4 @@
--- file 4
+USE hbana3assign2db;
 SELECT * FROM Product;
 SELECT * FROM Customer;
 SELECT * FROM BoughtBy;
