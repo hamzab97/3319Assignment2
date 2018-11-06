@@ -1,4 +1,3 @@
-
 -- file 4
 SELECT * FROM Product;
 SELECT * FROM Customer;
@@ -9,4 +8,5 @@ SELECT * FROM OrderSummary;
 SELECT * FROM OrderSummary WHERE `COST OFTOTAL ORDER` > 100;
 DELETE FROM Product WHERE Description="Bicycle";
 SELECT * FROM Product;
-DELETE FROM Agent WHERE Agent.City="Springfield"; --not deleted because that agent is used in the customer table
+DELETE FROM Agent WHERE Agent.City="Springfield";
+--not deleted because that agent is used in the customer table
